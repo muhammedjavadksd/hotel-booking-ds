@@ -1,0 +1,23 @@
+{
+  "name": "hotel-booking-ds",
+  "version": "1.0.0",
+  "description": "A ds solution for hotel booking algoritham",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muhammedjavadksd/hotel-booking-ds.git"
+  },
+  "author": "Muhammed Javad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/muhammedjavadksd/hotel-booking-ds/issues"
+  },
+  "homepage": "https://github.com/muhammedjavadksd/hotel-booking-ds#readme",
+  "dependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
