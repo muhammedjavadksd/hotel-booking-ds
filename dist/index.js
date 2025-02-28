@@ -1,49 +1,36 @@
-import { AllocationStrategies, AllocationStrategy, RoomType } from "./type";
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Hotel = void 0;
+const type_1 = require("./type");
 class Room {
-    constructor(
-        public floor: number,
-        public roomNumber: number,
-        public type: RoomType = RoomType.Standard,
-        public isAllocated: boolean = false
-    ) { }
-
+    constructor(floor, roomNumber, type = type_1.RoomType.Standard, isAllocated = false) {
+        this.floor = floor;
+        this.roomNumber = roomNumber;
+        this.type = type;
+        this.isAllocated = isAllocated;
+    }
     // Method to mark the room as allocated
     allocate() {
         this.isAllocated = true;
     }
-
     // Method to mark the room as available
     deallocate() {
         this.isAllocated = false;
     }
 }
-
-
-export class Hotel {
-    private rooms: Room[];
-    private allocatedRooms: Set<string>;
-    private allocationStrategies: Map<string, AllocationStrategy>;
-    private allocationStrategy: AllocationStrategies;
-
-    constructor(
-        floors: number,
-        roomsPerFloor: number,
-        allocationStrategy: AllocationStrategies = AllocationStrategies.BottomToTop,
-    ) {
+class Hotel {
+    constructor(floors, roomsPerFloor, allocationStrategy = type_1.AllocationStrategies.BottomToTop) {
         this.rooms = this.createRooms(floors, roomsPerFloor);
         this.allocatedRooms = new Set();
         this.allocationStrategies = new Map();
         this.allocationStrategy = allocationStrategy;
-
         // Register default strategies
-        this.registerAllocationStrategy(AllocationStrategies.BottomToTop, this.defaultBottomToTopAllocation);
-        this.registerAllocationStrategy(AllocationStrategies.TopToBottom, this.defaultTopToBottomAllocation);
+        this.registerAllocationStrategy(type_1.AllocationStrategies.BottomToTop, this.defaultBottomToTopAllocation);
+        this.registerAllocationStrategy(type_1.AllocationStrategies.TopToBottom, this.defaultTopToBottomAllocation);
     }
-
     // Helper method to create rooms
-    private createRooms(floors: number, roomsPerFloor: number): Room[] {
-        const rooms: Room[] = [];
+    createRooms(floors, roomsPerFloor) {
+        const rooms = [];
         for (let floor = 1; floor <= floors; floor++) {
             for (let roomNumber = 1; roomNumber <= roomsPerFloor; roomNumber++) {
                 rooms.push(new Room(floor, roomNumber));
@@ -51,41 +38,35 @@ export class Hotel {
         }
         return rooms;
     }
-
     // Default room allocation strategy (bottom-to-top)
-    private defaultBottomToTopAllocation(hotel: Hotel): Room[] {
+    defaultBottomToTopAllocation(hotel) {
         return hotel.getAvailableRooms();
     }
-
     // Default room allocation strategy (top-to-bottom)
-    private defaultTopToBottomAllocation(hotel: Hotel): Room[] {
+    defaultTopToBottomAllocation(hotel) {
         return hotel.getAvailableRooms().reverse();
     }
-
     // Register a new allocation strategy
-    private registerAllocationStrategy(name: AllocationStrategies, strategy: AllocationStrategy) {
+    registerAllocationStrategy(name, strategy) {
         this.allocationStrategies.set(name, strategy);
     }
-
     // Use the current allocation strategy to generate available rooms
-    private generateRoomNumbers(): Room[] {
+    generateRoomNumbers() {
         const strategy = this.allocationStrategies.get(this.allocationStrategy);
         if (!strategy) {
             throw new Error(`Strategy ${this.allocationStrategy} not found`);
         }
         return strategy(this);
     }
-
     // Change allocation strategy
-    changeAllocationStrategy(strategyName: AllocationStrategies): void {
+    changeAllocationStrategy(strategyName) {
         if (!this.allocationStrategies.has(strategyName)) {
             throw new Error(`Strategy ${strategyName} not found`);
         }
         this.allocationStrategy = strategyName;
     }
-
     // Check in method, allocate rooms
-    checkIn(numRooms: number): Room[] {
+    checkIn(numRooms) {
         const availableRooms = this.generateRoomNumbers();
         if (availableRooms.length < numRooms) {
             throw new Error('Not enough rooms available');
@@ -97,9 +78,8 @@ export class Hotel {
         }
         return allocatedRooms;
     }
-
     // Check out method, deallocate rooms
-    checkOut(roomNumbers: string[]): void {
+    checkOut(roomNumbers) {
         roomNumbers.forEach(roomNumberString => {
             const [floor, roomNumber] = roomNumberString.split('-').map(Number);
             const room = this.rooms.find(r => r.floor === floor && r.roomNumber === roomNumber);
@@ -109,22 +89,18 @@ export class Hotel {
             }
         });
     }
-
     // Get available rooms
-    getAvailableRooms(): Room[] {
+    getAvailableRooms() {
         return this.rooms.filter(room => !room.isAllocated);
     }
-
     // Get allocated rooms
-    getAllocatedRooms(): string[] {
+    getAllocatedRooms() {
         return Array.from(this.allocatedRooms);
     }
 }
-
-
-
-const hotel = new Hotel(2, 2, AllocationStrategies.BottomToTop);
-hotel.checkIn(1)
-hotel.changeAllocationStrategy(AllocationStrategies.TopToBottom)
-hotel.checkIn(1)
+exports.Hotel = Hotel;
+const hotel = new Hotel(2, 2, type_1.AllocationStrategies.BottomToTop);
+hotel.checkIn(1);
+hotel.changeAllocationStrategy(type_1.AllocationStrategies.TopToBottom);
+hotel.checkIn(1);
 console.log(hotel.getAvailableRooms());

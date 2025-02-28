@@ -4,7 +4,7 @@
   "description": "A ds solution for hotel booking algoritham",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node dist/index.js"
   },
   "repository": {
@@ -19,5 +19,11 @@
   "homepage": "https://github.com/muhammedjavadksd/hotel-booking-ds#readme",
   "dependencies": {
     "nodemon": "^3.1.9"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "typescript": "^5.7.3"
   }
 }
